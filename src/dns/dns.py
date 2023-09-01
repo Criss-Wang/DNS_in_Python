@@ -1,4 +1,4 @@
-from typing import Union, Tuple, TypeAlias
+from typing import Union, Tuple, TypeAlias, List, Dict, Any
 # from typing_extensions import TypeAlias
 
 from .zones import get_zone
@@ -7,7 +7,7 @@ byte: TypeAlias = Union[bytes, bytearray]
 
 def get_flags(flags: byte) -> byte:
     byte1 = bytes(flags[0])
-    print(flags,flags[0], byte1)
+    print(flags, flags[0], byte1)
     byte2 = bytes(flags[1])
 
     rflags = ''
@@ -24,7 +24,7 @@ def get_flags(flags: byte) -> byte:
     return int(QR + OPCODE + AA + TC + RD, 2).to_bytes(1, byteorder='big') + \
         int(RA + Z + RCODE, 2).to_bytes(1, byteorder='big')
 
-def get_question_domain(data: byte) -> Tuple:
+def get_question_domain(data: byte) -> Tuple[List[Dict[str, Any]], str, List[str]]:
     state = 0
     domain_string = ''
     domain_parts = []
@@ -50,18 +50,19 @@ def get_question_domain(data: byte) -> Tuple:
         current_position += 1
 
     question_type = data[current_position :current_position + 2]
+    
     return (domain_parts, question_type)
 
-def get_recs(data) -> Tuple:
+def get_recs(data: byte) -> Tuple:
     domain_parts, question_type = get_question_domain(data)
 
     if question_type == b'\x00\x01':
         qt = 'a' # answer key
     zone = get_zone(domain_parts)
-
+    
     return (zone[qt], qt, domain_parts)
 
-def build_question(domain_name: str, rectype: str) -> byte:
+def build_question(domain_name: List[str], rectype: str) -> byte:
     qbytes = b''
 
     for part in domain_name:
@@ -76,7 +77,7 @@ def build_question(domain_name: str, rectype: str) -> byte:
     qbytes += (1).to_bytes(2, byteorder='big') # class
     return qbytes
 
-def rec_to_bytes(domain_name: str, rectype: str, recttl: str, recval: str):
+def rec_to_bytes(rectype: str, recttl: int, recval: str) -> byte:
     rbytes = b"\xc0\x0c"
 
     if rectype == 'a':
@@ -137,8 +138,7 @@ def build_response(data: byte) -> byte:
     dns_question = build_question(domain_name, rectype)
 
     for record in records:
-        dns_body += rec_to_bytes(domain_name, rectype, record['ttl'], record['value'])
-
+        dns_body += rec_to_bytes(rectype, record['ttl'], record['value'])
     return dns_header + dns_question + dns_body
 
 
