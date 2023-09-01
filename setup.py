@@ -7,7 +7,8 @@ with open("README.md") as f:
     long_description = f.read()
 
 with open("./src/dns/__init__.py") as f:
-    for line in f.readline():
+    for line in f.readlines():
+        print(line)
         if line.startswith("__version__"):
             delim = '"' if '"' in line else "'"
             version = line.split(delim)[1]
@@ -16,7 +17,9 @@ with open("./src/dns/__init__.py") as f:
         print("Can't find version! Stop Here!")
         sys.exit(1)
 
-package_data = {}
+package_data = {
+    "dns": []
+}
 
 setuptools.setup(
     name="dns",
@@ -29,9 +32,9 @@ setuptools.setup(
     url="https://github.com/criss-wang/DNS_in_Python",
     packages=setuptools.find_packages("src"),
     package_dir={"":"src"},
-    package_data=package_data,
+    # package_data=package_data,
     python_requires=">=3.7",
-    ext_modules=[],
+    # ext_modules=[],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3.7",
@@ -44,5 +47,9 @@ setuptools.setup(
         "Operating System :: POSIX :: Linux",
         "Operating System :: Microsoft :: Windows",
     ],
-    
+    entry_points={
+        "console_scripts": [
+            "dns = dns:main",
+        ],
+    },
 )

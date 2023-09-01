@@ -13,6 +13,7 @@ def load_zone() -> dict:
             json_zones[zone_name] = data
     return json_zones
 
+zone_data = load_zone()
 
 def get_zone(domain: List) -> str:
     global zone_data
@@ -20,4 +21,3 @@ def get_zone(domain: List) -> str:
     zone_name = '.'.join(domain)
     return zone_data[zone_name]
 
-zone_data = load_zone()

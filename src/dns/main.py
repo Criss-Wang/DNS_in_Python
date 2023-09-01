@@ -2,7 +2,7 @@ import socket
 
 from .dns import build_response
 
-port = 53 # default DNS port
+port = 10053 # DNS port to listen to
 ip = "127.0.0.1"
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # IPv4, UDP

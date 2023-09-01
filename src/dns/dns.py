@@ -1,11 +1,11 @@
-from typing import Union, Tuple
-from typing_extensions import TypeAlias
+from typing import Union, Tuple, TypeAlias
+# from typing_extensions import TypeAlias
 
 from .zones import get_zone
 
 byte: TypeAlias = Union[bytes, bytearray]
 
-def getflags(flags: byte) -> byte:
+def get_flags(flags: byte) -> byte:
     byte1 = bytes(flags[0])
     byte2 = bytes(flags[1])
 
@@ -114,7 +114,7 @@ def build_response(data: byte) -> byte:
         TID += hex(byte)[2:]
 
     # Get the flags (3rd and 4th bytes)
-    flags = getflags(data[2:4])    
+    flags = get_flags(data[2:4])    
 
     # Question count - default 1
     QDCOUNT = b'\x00\x01'
