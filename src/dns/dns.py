@@ -7,6 +7,7 @@ byte: TypeAlias = Union[bytes, bytearray]
 
 def get_flags(flags: byte) -> byte:
     byte1 = bytes(flags[0])
+    print(flags,flags[0], byte1)
     byte2 = bytes(flags[1])
 
     rflags = ''
