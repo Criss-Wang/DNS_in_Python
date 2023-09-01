@@ -1,35 +1,9 @@
-from typing import List, Union, Tuple
+from typing import Union, Tuple
 from typing_extensions import TypeAlias
 
-import socket, glob, json
+from .zones import get_zone
 
 byte: TypeAlias = Union[bytes, bytearray]
-
-port = 53 # default DNS port
-ip = "127.0.0.1"
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # IPv4, UDP
-sock.bind((ip, port))
-
-def load_zone() -> dict:
-    json_zones = {}
-
-    zone_files = glob.glob('zones/*.zone')
-    for zone in zone_files:
-        with open(zone) as zone_data:
-            data = json.load(zone_data)
-            zone_name = data["$origin"]
-            json_zones[zone_name] = data
-    return json_zones
-
-
-def get_zone(domain: List) -> str:
-    global zone_data
-
-    zone_name = '.'.join(domain)
-    return zone_data[zone_name]
-
-zone_data = load_zone()
 
 def getflags(flags: byte) -> byte:
     byte1 = bytes(flags[0])
@@ -166,7 +140,4 @@ def build_response(data: byte) -> byte:
 
     return dns_header + dns_question + dns_body
 
-while True:
-    data, addr = sock.recvfrom(512)
-    response = build_response(data)
-    sock.sendto(response,addr)
+

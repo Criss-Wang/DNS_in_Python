@@ -1,0 +1,22 @@
+{
+    "$origin": "test.com.",
+    "$ttl": 3600,
+    "soa": {
+        "mname": "test.com.",
+        "rname": "test.com.",
+        "serial": "{time}",
+        "refresh": 3600,
+        "retry": 600,
+        "expire": 604800,
+        "minimum": 86400
+    },
+    "ns": [
+        { "host": "ns1.test.com." },
+        { "host": "ns2.test.com." }
+    ],
+    "a": [
+        { "name": "@", "ttl": 400, "value": "255.255.255.255" },
+        { "name": "@", "ttl": 400, "value": "127.0.0.1" },
+        { "name": "@", "ttl": 400, "value": "127.0.0.1" }
+    ]
+}
