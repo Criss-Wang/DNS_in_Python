@@ -1,7 +1,6 @@
-from dns.dns import ( get_flags, get_question_domain, get_recs, 
-                      build_question, rec_to_bytes, build_response )
+from dns.dns import (get_flags)
 from .base_test import BaseTest
-from unittest import mock
+
 
 class TestDNS(BaseTest):
     def test_get_flags(self):

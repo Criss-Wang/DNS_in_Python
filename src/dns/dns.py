@@ -5,12 +5,9 @@ from .zones import get_zone
 
 byte: TypeAlias = Union[bytes, bytearray]
 
+
 def get_flags(flags: byte) -> byte:
     byte1 = bytes(flags[0])
-    print(flags, flags[0], byte1)
-    byte2 = bytes(flags[1])
-
-    rflags = ''
 
     QR = '1'
 
@@ -20,16 +17,18 @@ def get_flags(flags: byte) -> byte:
         OPCODE += str(ord(byte1) & (1 << bit))
 
     AA, TC, RD, RA, Z, RCODE = '1', '0', '0', '0', '000', '0000'
-    
+
     return int(QR + OPCODE + AA + TC + RD, 2).to_bytes(1, byteorder='big') + \
         int(RA + Z + RCODE, 2).to_bytes(1, byteorder='big')
 
-def get_question_domain(data: byte) -> Tuple[List[Dict[str, Any]], str, List[str]]:
-    state = 0
-    domain_string = ''
-    domain_parts = []
-    current_string_size = 0
-    current_position = 0
+
+def get_question_domain(data: byte) -> Tuple[List[str], byte]:
+    state: int = 0
+    domain_string: str = ''
+    domain_parts: List = []
+    current_string_size: int = 0
+    current_position: int = 0
+    expected_length: int = 0
     for bytecode in data:
         if state == 1:
             if bytecode != 0:
@@ -46,21 +45,23 @@ def get_question_domain(data: byte) -> Tuple[List[Dict[str, Any]], str, List[str
                 break
         else:
             state = 1
-            expected_length = bytecode
+            expected_length = int(bytecode)
         current_position += 1
 
-    question_type = data[current_position :current_position + 2]
-    
+    question_type = data[current_position:current_position + 2]
+
     return (domain_parts, question_type)
 
-def get_recs(data: byte) -> Tuple:
-    domain_parts, question_type = get_question_domain(data)
 
+def get_recs(data: byte) -> Tuple[List[Dict[str, Any]], str, List[str]]:
+    domain_parts, question_type = get_question_domain(data)
+    qt = ''
     if question_type == b'\x00\x01':
-        qt = 'a' # answer key
+        qt = 'a'  # answer key
     zone = get_zone(domain_parts)
-    
+
     return (zone[qt], qt, domain_parts)
+
 
 def build_question(domain_name: List[str], rectype: str) -> byte:
     qbytes = b''
@@ -73,9 +74,10 @@ def build_question(domain_name: List[str], rectype: str) -> byte:
             qbytes += ord(char).to_bytes(1, byteorder='big')
 
     if rectype == 'a':
-        qbytes += (1).to_bytes(2, byteorder='big') # type
-    qbytes += (1).to_bytes(2, byteorder='big') # class
+        qbytes += (1).to_bytes(2, byteorder='big')  # type
+    qbytes += (1).to_bytes(2, byteorder='big')  # class
     return qbytes
+
 
 def rec_to_bytes(rectype: str, recttl: int, recval: str) -> byte:
     rbytes = b"\xc0\x0c"
@@ -92,6 +94,7 @@ def rec_to_bytes(rectype: str, recttl: int, recval: str) -> byte:
     for part in recval.split("."):
         rbytes += bytes([int(part)])
     return rbytes
+
 
 def build_response(data: byte) -> byte:
     """
@@ -110,13 +113,13 @@ def build_response(data: byte) -> byte:
     |                    ARCOUNT                    |
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     """
-    transaction_ID = data[:2] # first 2 bytes
+    transaction_ID = data[:2]  # first 2 bytes
     TID = ''
     for byte in transaction_ID:
         TID += hex(byte)[2:]
 
     # Get the flags (3rd and 4th bytes)
-    flags = get_flags(data[2:4])    
+    flags = get_flags(data[2:4])
 
     # Question count - default 1
     QDCOUNT = b'\x00\x01'
@@ -124,7 +127,7 @@ def build_response(data: byte) -> byte:
     # Answer count
     records, rectype, domain_name = get_recs(data[12:])
     ANCOUNT = len(records).to_bytes(2, byteorder='big')
-    
+
     # Nameserver count
     NSCOUNT = (0).to_bytes(2, byteorder='big')
 
@@ -138,7 +141,5 @@ def build_response(data: byte) -> byte:
     dns_question = build_question(domain_name, rectype)
 
     for record in records:
-        dns_body += rec_to_bytes(rectype, record['ttl'], record['value'])
+        dns_body += rec_to_bytes(rectype, int(record['ttl']), record['value'])
     return dns_header + dns_question + dns_body
-
-

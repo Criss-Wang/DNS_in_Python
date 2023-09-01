@@ -1,0 +1,5 @@
+[run]
+cover_pylib = True
+source = src/dns
+omit = 
+    */dns/__main__.py

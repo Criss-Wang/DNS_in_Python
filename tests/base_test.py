@@ -3,6 +3,7 @@ import logging
 import sys
 from unittest import TestCase
 
+
 class BaseTest(TestCase):
     def setUp(self):
         logging.info("=" * 60)
