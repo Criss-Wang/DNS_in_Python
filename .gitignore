@@ -133,3 +133,7 @@ dmypy.json
 
 # Generated data
 tests/data/*.json
+
+!src/dns/configs/
+!src/dns/logs/
+!src/dns/setup.py
