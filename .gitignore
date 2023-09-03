@@ -1,5 +1,5 @@
 #
-dns/
+dns/zones
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -136,4 +136,4 @@ tests/data/*.json
 
 !src/dns/configs/
 !src/dns/logs/
-!src/dns/setup.py
+!src/dns/*.py
