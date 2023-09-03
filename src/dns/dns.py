@@ -2,6 +2,7 @@ from typing import Union, Tuple, TypeAlias, List, Dict, Any
 # from typing_extensions import TypeAlias
 
 from .zones import get_zone
+from .setup import logger
 
 byte: TypeAlias = Union[bytes, bytearray]
 
@@ -142,4 +143,7 @@ def build_response(data: byte) -> byte:
 
     for record in records:
         dns_body += rec_to_bytes(rectype, int(record['ttl']), record['value'])
-    return dns_header + dns_question + dns_body
+
+    response = dns_header + dns_question + dns_body
+    logger.info(f"Response: {response!r}")
+    return response
