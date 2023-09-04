@@ -45,7 +45,7 @@ jobs:
         python -m unittest
     - name: Generate coverage report
       run: |
-        coverage run --parallel-mode -m unittest
+        coverage run --source dns --parallel-mode -m unittest
         coverage combine
         coverage xml -i
       env:
