@@ -131,6 +131,9 @@ dmypy.json
 # Generated data
 tests/data/*.json
 
+# outmost dns env
+/dns/
+
 !src/dns/configs/
 !src/dns/logs/
 !src/dns/*.py

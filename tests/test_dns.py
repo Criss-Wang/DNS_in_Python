@@ -1,5 +1,4 @@
-import dns
-from dns.dns import get_flags
+from dns import dns
 from .base_test import BaseTest
 
 import os
@@ -14,4 +13,4 @@ class TestDNS(BaseTest):
     def test_get_flags(self):
         logging.info(path)
         mock_data = int(1).to_bytes(1, byteorder='big') * 2
-        self.assertEqual(get_flags(mock_data), b'\x84\x00')
+        self.assertEqual(dns.get_flags(mock_data), b'\x84\x00')
