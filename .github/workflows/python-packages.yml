@@ -44,6 +44,7 @@ jobs:
         pip install (Get-ChildItem dist/*.whl)
         python -m unittest
     - name: Generate coverage report
+      if: matrix.os != 'windows-latest'
       run: |
         rm -rf dns
         coverage run --source dns --parallel-mode -m unittest
@@ -51,6 +52,13 @@ jobs:
         coverage xml -i
       env:
         COVERAGE_RUN: True
+    - name: Generate coverage report on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        rmdir /s /q dns
+        coverage run --source dns --parallel-mode -m unittest
+        coverage combine
+        coverage xml -i
     - name: Upload report to Codecov
       uses: codecov/codecov-action@v3
       with:
