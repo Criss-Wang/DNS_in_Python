@@ -18,7 +18,9 @@ with open("./src/dns/__init__.py") as f:
         sys.exit(1)
 
 package_data = {
-    "dns": []
+    "dns": [
+        "configs/*"
+    ]
 }
 
 setuptools.setup(
@@ -33,7 +35,7 @@ setuptools.setup(
     setup_requires=['wheel'],
     packages=setuptools.find_packages("src"),
     package_dir={"": "src"},
-    # package_data=package_data,
+    package_data=package_data,
     python_requires=">=3.7",
     # ext_modules=[],
     classifiers=[

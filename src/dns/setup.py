@@ -9,5 +9,10 @@ sock.bind((ip, port))
 
 os.chdir(os.path.dirname(__file__))
 
+if not os.path.exists("logs"):
+    os.mkdir("logs")
+with open("logs/file.log", "w") as f:
+    pass
+
 logging.config.fileConfig('configs/logging_config.ini')
 logger = logging.getLogger(__name__)
