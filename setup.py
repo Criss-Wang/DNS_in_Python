@@ -1,4 +1,4 @@
-import platform
+# import platform
 import sys
 
 import setuptools
@@ -30,8 +30,9 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/criss-wang/DNS_in_Python",
+    setup_requires=['wheel'],
     packages=setuptools.find_packages("src"),
-    package_dir={"":"src"},
+    package_dir={"": "src"},
     # package_data=package_data,
     python_requires=">=3.7",
     # ext_modules=[],
