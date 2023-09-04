@@ -3,3 +3,4 @@ cover_pylib = True
 source = dns
 omit = 
     */dns/__main__.py
+    */DNS_in_Python/dns
