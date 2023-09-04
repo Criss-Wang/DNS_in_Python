@@ -55,7 +55,7 @@ jobs:
     - name: Generate coverage report on Windows
       if: matrix.os == 'windows-latest'
       run: |
-        rmdir /s /q dns
+        rmdir /s dns
         coverage run --source dns --parallel-mode -m unittest
         coverage combine
         coverage xml -i
