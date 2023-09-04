@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/Criss-Wang/DNS_in_Python/graph/badge.svg?token=STQ529H003)](https://codecov.io/gh/Criss-Wang/DNS_in_Python)
 - How to `from dns import *`  when writing test cases:
     - always create a venv via `python -m venv dns`
     - run `source /dns/bin/activate`
